@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f7c6d9;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      position: relative;
+      height: 60px;
+    }
+
+    button {
+      padding: 10px 25px;
+      border-radius: 20px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      position: absolute;
+      transition: left 0.05s ease, top 0.05s ease;
+    }
+
+    #yes {
+      background: #ff4d88;
+      color: white;
+      left: 20px;
+      top: 0;
+      position: relative;
+    }
+
+    #no {
+      background: #e0e0e0;
+      left: 180px;
+      top: 0;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Will you be my valentine?</h1>
+    <div class="buttons">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+    <div class="hint">"No" seems a bit shy</div>
+  </div>
+
+  <script>
+    const noButton = document.getElementById("no");
+    const buttonsBox = document.querySelector(".buttons");
+    const boxWidth = buttonsBox.clientWidth;
+    const boxHeight = buttonsBox.clientHeight;
+    const btnWidth = noButton.offsetWidth;
+    const btnHeight = noButton.offsetHeight;
+
+    // Funzione per spostare il bottone in direzione casuale molto lontano
+    function moveNoButton() {
+      const maxDistance = 120 + Math.random() * 50; // 120-170px
+      const angle = Math.random() * 2 * Math.PI; // direzione casuale
+
+      let newX = parseFloat(noButton.style.left || 180) + Math.cos(angle) * maxDistance;
+      let newY = parseFloat(noButton.style.top || 0) + Math.sin(angle) * maxDistance;
+
+      // limiti della card
+      newX = Math.max(0, Math.min(newX, boxWidth - btnWidth));
+      newY = Math.max(0, Math.min(newY, boxHeight - btnHeight));
+
+      noButton.style.left = newX + "px";
+      noButton.style.top = newY + "px";
+    }
+
+    // Loop continuo finché non clicchi Yes
+    let moving = true;
+    function loop() {
+      if (moving) {
+        moveNoButton();
+        requestAnimationFrame(loop);
+      }
+    }
+    loop();
+
+    // Cliccando Yes ferma il loop, fa scomparire il bottone No e mostra il messaggio
+    document.getElementById("yes").addEventListener("click", () => {
+      moving = false;
+      noButton.style.display = "none"; // fa scomparire il bottone
+      document.querySelector("h1").innerText = "Good girl!";
+    });
+  </script>
+</body>
+</html>
